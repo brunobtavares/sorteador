@@ -1,13 +1,15 @@
-<ng-container *ngIf="!showRandomizer">
+<!-- <ng-container *ngIf="!showRandomizer">
   <div class="main d-flex justify-content-center align-items-center">
-    <form [formGroup]="form">
+    <form [formGroup]="form" class="col-12">
       <div>
-        <h1>Lista de nomes</h1>
-        <textarea
-          class="form-control"
-          formControlName="nameList"
-          rows="15"
-        ></textarea>
+        <div class="col-sm-12 col-md-6 col-lg-6">
+          <h1>Lista de nomes</h1>
+          <textarea
+            class="form-control"
+            formControlName="nameList"
+            rows="15"
+          ></textarea>
+        </div>
         <div class="d-flex justify-content-between mt-1">
           <div>
             <button
@@ -45,6 +47,62 @@
       </div>
     </form>
   </div>
+</ng-container> -->
+
+<ng-container *ngIf="!showRandomizer">
+  <form
+    [formGroup]="form"
+    class="main d-flex justify-content-center align-items-center"
+  >
+    <div>
+      <div>
+        <h1>Lista de nomes</h1>
+        <textarea
+          class="form-control"
+          formControlName="nameList"
+          rows="15"
+        ></textarea>
+      </div>
+      <div class="d-lg-flex mt-1 col-lg-12 col-md-12 col-sm-12 col-12">
+        <button
+          class="btn btn-success col-lg-3 me-lg-1 col-md-12 col-sm-12 col-12"
+          (click)="randomizeName()"
+          type="button"
+        >
+          Sortear nome
+        </button>
+        <div
+          class="d-lg-flex justify-content-end d-md-flex d-sm-flex gap-1 col-lg-9 col-md-12 col-sm-12 col-12"
+        >
+          <button
+            class="btn btn-success mt-lg-0 mt-1 col-lg-4 col-md-6 col-sm-6 col-12"
+            (click)="randomizeNumber()"
+            type="button"
+          >
+            Sortear numero
+          </button>
+          <div
+            class="d-flex gap-1 mt-lg-0 mt-1 col-lg-4 col-md-6 col-sm-6 col-12"
+          >
+            <input
+              class="form-control"
+              formControlName="minValue"
+              type="number"
+              placeholder="De"
+              min="1"
+            />
+            <input
+              class="form-control"
+              formControlName="maxValue"
+              type="number"
+              placeholder="Até"
+              min="1"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
 </ng-container>
 
 <ng-container *ngIf="showRandomizer">
