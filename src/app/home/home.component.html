@@ -1,0 +1,52 @@
+<ng-container *ngIf="!showRandomizer">
+  <div class="main d-flex justify-content-center align-items-center">
+    <form [formGroup]="form">
+      <div>
+        <h1>Lista de nomes</h1>
+        <textarea
+          class="form-control"
+          formControlName="nameList"
+          rows="15"
+        ></textarea>
+        <div class="d-flex justify-content-between mt-1">
+          <div>
+            <button
+              class="btn btn-success"
+              (click)="randomizeName()"
+              type="button"
+            >
+              Sortear nome
+            </button>
+          </div>
+          <div class="d-flex justify-content-end gap-1">
+            <button
+              class="btn btn-success"
+              (click)="randomizeNumber()"
+              type="button"
+            >
+              Sortear numero
+            </button>
+            <input
+              class="form-control"
+              formControlName="minValue"
+              type="number"
+              placeholder="De"
+              min="1"
+            />
+            <input
+              class="form-control"
+              formControlName="maxValue"
+              type="number"
+              placeholder="Até"
+              min="1"
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="showRandomizer">
+  <app-randomizer [items]="items" (onClose)="onClose()"></app-randomizer>
+</ng-container>
