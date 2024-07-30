@@ -1,9 +1,10 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-randomizer',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './randomizer.component.html',
   styleUrl: './randomizer.component.scss',
 })
@@ -13,6 +14,7 @@ export class RandomizerComponent implements OnInit {
 
   public winner: string = '';
   public winners: string[] = [];
+  public showFireworks: boolean = false;
 
   private loading: boolean = false;
 
@@ -27,6 +29,7 @@ export class RandomizerComponent implements OnInit {
       return;
     }
 
+    this.showFireworks = false;
     this.loading = true;
     setTimeout(() => this.stopRandomizer(), 3000);
 
@@ -37,6 +40,8 @@ export class RandomizerComponent implements OnInit {
     }
 
     const randomNumber = Math.floor(Math.random() * listSize);
+
+    this.showFireworks = true;
     this.winner = this.items[randomNumber];
 
     this.winners.push(this.winner);
