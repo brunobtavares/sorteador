@@ -14,7 +14,7 @@ export class RandomizerComponent implements OnInit {
 
   public winner: string = '';
   public winners: string[] = [];
-  public showFireworks: boolean = false;
+  public showWinner: boolean = false;
 
   private loading: boolean = false;
 
@@ -29,19 +29,21 @@ export class RandomizerComponent implements OnInit {
       return;
     }
 
-    this.showFireworks = false;
+    this.showWinner = false;
     this.loading = true;
-    setTimeout(() => this.stopRandomizer(), 3000);
+    setTimeout(() => this.stopRandomizer(), 5000);
 
+    var sleepTimeMS = 100;
     while (this.loading) {
       const randomNumber = Math.floor(Math.random() * listSize);
       this.winner = this.items[randomNumber];
-      await this.sleep(150);
+      await this.sleep(sleepTimeMS);
+      sleepTimeMS += 20;
     }
 
     const randomNumber = Math.floor(Math.random() * listSize);
 
-    this.showFireworks = true;
+    this.showWinner = true;
     this.winner = this.items[randomNumber];
 
     this.winners.push(this.winner);

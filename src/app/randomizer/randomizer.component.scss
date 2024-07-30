@@ -7,10 +7,32 @@
 
 .winner-box {
   height: 70svh;
+  max-width: 100svw;
+  line-break: anywhere;
+
+  .winner {
+    font-size: 50px;
+    font-weight: 700;
+  }
+}
+
+.btn-exit {
+  user-select: none; /* Padrão */
+  -webkit-user-select: none; /* Safari */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
 }
 
 .btn-exit:hover {
   cursor: pointer;
+}
+.btn-exit:active {
+  color: #fff;
+}
+
+.glowing-text {
+  color: #fff;
+  animation: glow 2s infinite;
 }
 
 @keyframes glow {
@@ -23,11 +45,4 @@
   100% {
     text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
   }
-}
-
-.glowing-text {
-  display: inline-block;
-  font-size: 2rem;
-  color: #fff;
-  animation: glow 2s infinite;
 }
