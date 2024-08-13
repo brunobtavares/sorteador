@@ -31,8 +31,8 @@ export class HomeComponent implements OnInit {
 
     const names = this.form
       .get('nameList')
-      ?.value.split('\n')
-      .filter((n: String) => n.trim());
+      ?.value?.split('\n')
+      ?.filter((n: String) => n.trim());
 
     localStorage.setItem('names', this.form.get('nameList')?.value);
 
