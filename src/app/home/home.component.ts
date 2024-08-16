@@ -26,18 +26,19 @@ export class HomeComponent implements OnInit {
     if (names) this.form.get('nameList')?.setValue(names);
   }
 
-  public randomizeName() {
-    this.items = [];
+  public randomizeName(): void {
+    const rawNames = this.form.get('nameList')?.value;
 
-    const names = this.form
-      .get('nameList')
-      ?.value?.split('\n')
-      ?.filter((n: String) => n.trim());
+    const names = rawNames
+      ?.split('\n')
+      .map((n: string) => n.trim())
+      .filter(Boolean);
 
-    localStorage.setItem('names', this.form.get('nameList')?.value);
-
-    this.items = names;
-    this.showRandomizer = true;
+    if (names) {
+      localStorage.setItem('names', rawNames);
+      this.items = names;
+      this.showRandomizer = true;
+    }
   }
 
   public randomizeNumber() {

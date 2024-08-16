@@ -96,4 +96,27 @@ describe('RandomizerComponent', () => {
 
     flush();
   }));
+
+  it('should clear console and log winners after randomizer completes with one item', () => {
+    spyOn(console, 'clear');
+    spyOn(console, 'table');
+    component.items = ['item1'];
+
+    component.randomizer();
+
+    expect(console.clear).toHaveBeenCalled();
+    expect(console.table).toHaveBeenCalledWith(component.winners);
+  });
+
+  it('should do nothing when loading is true', () => {
+    spyOn(console, 'clear');
+    spyOn(component, 'stopRandomizer');
+
+    component.loading = true;
+
+    component.randomizer();
+
+    expect(console.clear).not.toHaveBeenCalled();
+    expect(component.stopRandomizer).not.toHaveBeenCalled();
+  });
 });
