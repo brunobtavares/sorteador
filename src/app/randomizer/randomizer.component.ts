@@ -24,6 +24,7 @@ export class RandomizerComponent implements OnInit {
 
   public async randomizer() {
     const listSize = this.items.length;
+    
     if (listSize < 1) {
       this.winner = 'Todos já foram sorteados!';
       return;
@@ -31,30 +32,33 @@ export class RandomizerComponent implements OnInit {
 
     this.showWinner = false;
     this.loading = true;
-    setTimeout(() => this.stopRandomizer(), 5000);
 
-    var sleepTimeMS = 100;
+    const stopRandomizerPromise = this.stopRandomizer(5000);
+
+    let sleepTimeMS = 100;
     while (this.loading) {
-      const randomNumber = Math.floor(Math.random() * listSize);
-      this.winner = this.items[randomNumber];
+      const randomIndex = Math.floor(Math.random() * listSize);
+      this.winner = this.items[randomIndex];
       await this.sleep(sleepTimeMS);
       sleepTimeMS += 20;
     }
 
-    const randomNumber = Math.floor(Math.random() * listSize);
+    await stopRandomizerPromise;
 
+    const finalIndex = Math.floor(Math.random() * listSize);
+    this.winner = this.items[finalIndex];
     this.showWinner = true;
-    this.winner = this.items[randomNumber];
 
     this.winners.push(this.winner);
 
     console.clear();
     console.table(this.winners);
 
-    this.items.splice(randomNumber, 1);
+    this.items.splice(finalIndex, 1);
   }
 
-  public stopRandomizer() {
+  public async stopRandomizer(ms: number): Promise<void> {
+    await this.sleep(ms);
     this.loading = false;
   }
 

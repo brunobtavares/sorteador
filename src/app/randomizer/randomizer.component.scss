@@ -13,10 +13,8 @@
   .winner {
     font-size: 3rem;
     font-weight: 700;
-  }
 
-  @media (min-width: 576px) {
-    .winner {
+    @media (min-width: 576px) {
       font-size: 6rem;
     }
   }
@@ -27,28 +25,26 @@
   -webkit-user-select: none; /* Safari */
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
-}
-
-.btn-exit:hover {
   cursor: pointer;
-}
-.btn-exit:active {
-  color: #fff;
+
+  &:active {
+    color: #fff;
+  }
 }
 
 .glowing-text {
   color: #fff;
   animation: glow 2s infinite;
-}
 
-@keyframes glow {
-  0% {
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
-  }
-  50% {
-    text-shadow: 0 0 20px rgba(255, 255, 255, 1);
-  }
-  100% {
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+  @keyframes glow {
+    0% {
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+    }
+    50% {
+      text-shadow: 0 0 20px rgba(255, 255, 255, 1);
+    }
+    100% {
+      text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+    }
   }
 }

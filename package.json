@@ -7,7 +7,7 @@
     "build": "ng build",
     "deploy": "ng build --output-path docs --base-href /sorteador/",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test --code-coverage"
   },
   "private": true,
   "dependencies": {
