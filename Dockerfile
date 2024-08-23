@@ -15,3 +15,6 @@ RUN ng build --configuration=production
 FROM nginx:latest
 
 COPY --from=angular /app/docs /usr/share/nginx/html/sorteador
+
+# docker build . -t angular-sorteador
+# docker run -p 4200:80 angular-sorteador
