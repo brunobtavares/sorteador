@@ -1,19 +1,22 @@
-FROM node:20.16.0 as angular
+FROM node:20.16.0 AS angular
 
 WORKDIR /app
 
+# Copiar apenas os arquivos necessários para o npm install
 COPY package*.json ./
 
-RUN npm install
+RUN npm install --silent && npm cache clean --force
 
-RUN npm install -g @angular/cli
-
+# Copiar o restante do código
 COPY . .
 
-RUN ng build --configuration=production
+# Rodar a build de produção
+RUN npm run build -- --configuration=production
 
-FROM nginx:latest
+# Utilizar a versão 'alpine' para uma imagem mais leve
+FROM nginx:alpine
 
+# Copiar os arquivos construídos para o diretório padrão do Nginx
 COPY --from=angular /app/docs /usr/share/nginx/html/sorteador
 
 # docker build . -t angular-sorteador
