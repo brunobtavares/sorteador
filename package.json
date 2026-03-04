@@ -8,8 +8,9 @@
     "deploy": "ng build --output-path docs --base-href /sorteador/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test --code-coverage",
+    "test:ci": "ng test --code-coverage --watch=false --browsers=ChromeHeadlessNoSandbox",
     "lint": "eslint . --ext .ts",
-    "ci": "npm run lint && npm run build && npm test -- --watch=false --browsers=ChromeHeadless"
+    "ci": "npm run lint && npm run build && npm run test:ci"
   },
   "private": true,
   "dependencies": {
