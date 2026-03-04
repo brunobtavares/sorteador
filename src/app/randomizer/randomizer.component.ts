@@ -15,7 +15,9 @@ import type { OnDestroy, OnInit } from '@angular/core';
   styleUrl: './randomizer.component.scss',
 })
 export class RandomizerComponent implements OnInit, OnDestroy {
+  private readonly shuffleDurationMS: number = 5000;
   private inputItems: string[] = [];
+  private shuffledQueue: string[] = [];
   private stopTimer?: ReturnType<typeof setTimeout>;
   private resolveStopTimer?: () => void;
   private destroyed: boolean = false;
@@ -23,6 +25,7 @@ export class RandomizerComponent implements OnInit, OnDestroy {
   @Input() set items(value: string[]) {
     this.inputItems = Array.isArray(value) ? value : [];
     this.remainingItems = [...this.inputItems];
+    this.shuffledQueue = this.shuffleItems([...this.inputItems]);
     this.winner = '';
     this.winners = [];
     this.showWinner = false;
@@ -71,6 +74,7 @@ export class RandomizerComponent implements OnInit, OnDestroy {
       this.winner = this.remainingItems[0];
       this.listWinners(this.winner);
       this.remainingItems = [];
+      this.shuffledQueue = [];
       this.showWinner = true;
       return;
     }
@@ -78,14 +82,15 @@ export class RandomizerComponent implements OnInit, OnDestroy {
     this.showWinner = false;
     this.loading = true;
 
-    const stopRandomizerPromise = this.stopRandomizer(5000);
+    const stopRandomizerPromise = this.stopRandomizer(this.shuffleDurationMS);
+    const shuffleStartMS = Date.now();
 
-    let sleepTimeMS = 100;
     while (this.loading && !this.destroyed) {
-      const randomIndex = Math.floor(Math.random() * listSize);
+      const randomIndex = this.randomInt(listSize);
       this.winner = this.remainingItems[randomIndex];
-      await this.sleep(sleepTimeMS);
-      sleepTimeMS += 20;
+      const elapsedMS = Date.now() - shuffleStartMS;
+      const progress = Math.min(elapsedMS / this.shuffleDurationMS, 1);
+      await this.sleep(this.getShuffleFrameDelay(progress));
     }
 
     if (this.destroyed) return;
@@ -94,11 +99,21 @@ export class RandomizerComponent implements OnInit, OnDestroy {
 
     if (this.destroyed) return;
 
-    const finalIndex = Math.floor(Math.random() * listSize);
-    this.winner = this.remainingItems[finalIndex];
+    const nextWinner = this.shuffledQueue.pop();
+    if (!nextWinner) {
+      this.winner = 'Todos já foram sorteados!';
+      this.showWinner = true;
+      return;
+    }
+    this.winner = nextWinner;
 
     this.listWinners(this.winner);
 
+    const finalIndex = this.remainingItems.indexOf(nextWinner);
+    if (finalIndex === -1) {
+      this.showWinner = true;
+      return;
+    }
     this.remainingItems.splice(finalIndex, 1);
 
     this.showWinner = true;
@@ -125,5 +140,41 @@ export class RandomizerComponent implements OnInit, OnDestroy {
 
   private sleep(ms: number): Promise<void> {
     return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  private getShuffleFrameDelay(progress: number): number {
+    const easedProgress = Math.min(Math.max(progress, 0), 1) ** 2;
+    const minDelayMS = 30;
+    const maxDelayMS = 140;
+
+    return Math.round(minDelayMS + (maxDelayMS - minDelayMS) * easedProgress);
+  }
+
+  private shuffleItems(items: string[]): string[] {
+    for (let i = items.length - 1; i > 0; i--) {
+      const j = this.randomInt(i + 1);
+      [items[i], items[j]] = [items[j], items[i]];
+    }
+
+    return items;
+  }
+
+  private randomInt(maxExclusive: number): number {
+    if (maxExclusive <= 1) return 0;
+
+    const cryptoApi = globalThis.crypto;
+    if (cryptoApi?.getRandomValues) {
+      const upperBound = 0x1_0000_0000;
+      const unbiasedLimit = upperBound - (upperBound % maxExclusive);
+      const randomBuffer = new Uint32Array(1);
+
+      do {
+        cryptoApi.getRandomValues(randomBuffer);
+      } while (randomBuffer[0] >= unbiasedLimit);
+
+      return randomBuffer[0] % maxExclusive;
+    }
+
+    return Math.floor(Math.random() * maxExclusive);
   }
 }

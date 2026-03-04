@@ -134,4 +134,38 @@ describe('RandomizerComponent', () => {
 
     flush();
   }));
+
+  it('should draw winners without repetition based on shuffled queue', fakeAsync(() => {
+    const componentWithPrivate = component as unknown as {
+      shuffleItems: (items: string[]) => string[];
+    };
+
+    spyOn(componentWithPrivate, 'shuffleItems').and.returnValue([
+      'item3',
+      'item1',
+      'item2',
+    ]);
+    component.items = ['item1', 'item2', 'item3'];
+
+    component.randomizer();
+    tick(timeOutMS);
+    const firstWinner = component.winner;
+
+    component.randomizer();
+    tick(timeOutMS);
+    const secondWinner = component.winner;
+
+    component.randomizer();
+    const thirdWinner = component.winner;
+
+    expect([firstWinner, secondWinner, thirdWinner]).toEqual([
+      'item2',
+      'item1',
+      'item3',
+    ]);
+    expect(new Set(component.winners).size).toBe(3);
+    expect(component.remainingItems.length).toBe(0);
+
+    flush();
+  }));
 });
