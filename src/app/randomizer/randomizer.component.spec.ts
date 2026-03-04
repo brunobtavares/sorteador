@@ -1,10 +1,10 @@
 import {
-  ComponentFixture,
   fakeAsync,
   flush,
   TestBed,
   tick,
 } from '@angular/core/testing';
+import type { ComponentFixture } from '@angular/core/testing';
 import { RandomizerComponent } from './randomizer.component';
 
 const timeOutMS = 5500;
@@ -71,14 +71,15 @@ describe('RandomizerComponent', () => {
     flush();
   }));
 
-  it('should remove the winner from items array', fakeAsync(() => {
+  it('should not mutate input items and should remove winner from remaining items', fakeAsync(() => {
     const items = ['item1', 'item2', 'item3'];
     component.items = [...items];
 
     component.randomizer();
     tick(timeOutMS);
 
-    expect(component.items.length).toBe(items.length - 1);
+    expect(component.items).toEqual(items);
+    expect(component.remainingItems.length).toBe(items.length - 1);
 
     flush();
   }));
@@ -106,6 +107,7 @@ describe('RandomizerComponent', () => {
 
     expect(console.clear).toHaveBeenCalled();
     expect(console.table).toHaveBeenCalledWith(component.winners);
+    expect(component.showWinner).toBeTrue();
   });
 
   it('should do nothing when loading is true', () => {
@@ -119,4 +121,17 @@ describe('RandomizerComponent', () => {
     expect(console.clear).not.toHaveBeenCalled();
     expect(component.stopRandomizer).not.toHaveBeenCalled();
   });
+
+  it('should stop randomizer flow when component is destroyed', fakeAsync(() => {
+    component.items = ['item1', 'item2', 'item3'];
+
+    component.randomizer();
+    component.ngOnDestroy();
+    tick(timeOutMS);
+
+    expect(component.loading).toBeFalse();
+    expect(component.winners.length).toBe(0);
+
+    flush();
+  }));
 });

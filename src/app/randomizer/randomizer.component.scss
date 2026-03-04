@@ -21,6 +21,10 @@
 }
 
 .btn-exit {
+  background: transparent;
+  border: 0;
+  color: inherit;
+  font-size: 1.25rem;
   user-select: none; /* Padrão */
   -webkit-user-select: none; /* Safari */
   -moz-user-select: none; /* Firefox */

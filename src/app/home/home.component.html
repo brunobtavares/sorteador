@@ -8,13 +8,21 @@
         <h1>Lista de nomes</h1>
         <textarea
           class="form-control"
+          [class.is-invalid]="form.controls.nameList.touched && !canRandomizeName()"
           formControlName="nameList"
           rows="15"
         ></textarea>
+        <div
+          *ngIf="form.controls.nameList.touched && !canRandomizeName()"
+          class="invalid-feedback d-block"
+        >
+          Informe ao menos um nome válido.
+        </div>
       </div>
       <div class="d-lg-flex mt-1 col-lg-12 col-md-12 col-sm-12 col-12">
         <button
           class="btn btn-success col-lg-3 me-lg-1 col-md-12 col-sm-12 col-12"
+          [disabled]="!canRandomizeName()"
           (click)="randomizeName()"
           type="button"
         >
@@ -25,6 +33,7 @@
         >
           <button
             class="btn btn-success mt-lg-0 mt-1 col-lg-4 col-md-6 col-sm-6 col-12"
+            [disabled]="!canRandomizeNumber()"
             (click)="randomizeNumber()"
             type="button"
           >
@@ -35,6 +44,9 @@
           >
             <input
               class="form-control"
+              [class.is-invalid]="
+                form.controls.minValue.touched && form.controls.minValue.invalid
+              "
               formControlName="minValue"
               type="number"
               placeholder="De"
@@ -42,12 +54,56 @@
             />
             <input
               class="form-control"
+              [class.is-invalid]="
+                form.controls.maxValue.touched && form.controls.maxValue.invalid
+              "
               formControlName="maxValue"
               type="number"
               placeholder="Até"
               min="1"
             />
           </div>
+        </div>
+      </div>
+      <div class="mt-1">
+        <div
+          *ngIf="
+            form.controls.minValue.touched &&
+            form.controls.minValue.hasError('required')
+          "
+          class="invalid-feedback d-block"
+        >
+          Informe o valor inicial.
+        </div>
+        <div
+          *ngIf="
+            form.controls.maxValue.touched &&
+            form.controls.maxValue.hasError('required')
+          "
+          class="invalid-feedback d-block"
+        >
+          Informe o valor final.
+        </div>
+        <div
+          *ngIf="form.controls.minValue.hasError('min') || form.controls.maxValue.hasError('min')"
+          class="invalid-feedback d-block"
+        >
+          Use valores maiores ou iguais a 1.
+        </div>
+        <div
+          *ngIf="
+            form.controls.minValue.hasError('integer') ||
+            form.controls.maxValue.hasError('integer')
+          "
+          class="invalid-feedback d-block"
+        >
+          Use apenas números inteiros.
+        </div>
+        <div
+          *ngIf="form.hasError('invalidRange')"
+          class="invalid-feedback d-block"
+        >
+          O valor inicial deve ser menor ou igual ao valor final.
         </div>
       </div>
     </div>

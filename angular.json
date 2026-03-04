@@ -34,7 +34,7 @@
               "src/assets/bootstrap/bootstrap.min.css",
               "src/styles.scss"
             ],
-            "scripts": ["src/assets/bootstrap/bootstrap.bundle.min.js"]
+            "scripts": []
           },
           "configurations": {
             "production": {
