@@ -34,11 +34,15 @@ export class HomeComponent implements OnInit {
       .map((n: string) => n.trim())
       .filter(Boolean);
 
-    if (names) {
-      localStorage.setItem('names', rawNames);
-      this.items = names;
-      this.showRandomizer = true;
+    if (!Array.isArray(names) || names.length === 0) {
+      this.items = [];
+      this.showRandomizer = false;
+      return;
     }
+
+    localStorage.setItem('names', rawNames);
+    this.items = names;
+    this.showRandomizer = true;
   }
 
   public randomizeNumber() {
@@ -47,7 +51,16 @@ export class HomeComponent implements OnInit {
     const minValue = Number(this.form.get('minValue')?.value);
     const maxValue = Number(this.form.get('maxValue')?.value);
 
-    if (minValue == 0 && maxValue == 0) return;
+    if (
+      !Number.isInteger(minValue) ||
+      !Number.isInteger(maxValue) ||
+      minValue < 1 ||
+      maxValue < 1 ||
+      minValue > maxValue
+    ) {
+      this.showRandomizer = false;
+      return;
+    }
 
     for (let i = minValue; i <= maxValue; i++) {
       this.items.push(i.toString());

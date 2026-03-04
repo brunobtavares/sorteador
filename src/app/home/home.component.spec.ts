@@ -13,6 +13,7 @@ describe('HomeComponent', () => {
 
     fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
+    localStorage.clear();
     fixture.detectChanges();
   });
 
@@ -39,13 +40,22 @@ describe('HomeComponent', () => {
     expect(localStorage.getItem('names')).toBe('Alice\nBob\nCharlie');
   });
 
-  it('should clear items and update showRandomizer when randomizeName is called with empty input', () => {
+  it('should keep randomizer hidden when randomizeName is called with empty input', () => {
     component.form.get('nameList')?.setValue('');
 
     component.randomizeName();
 
     expect(component.items).toEqual([]);
-    expect(component.showRandomizer).toBeTrue();
+    expect(component.showRandomizer).toBeFalse();
+  });
+
+  it('should keep randomizer hidden when randomizeName has only blank lines', () => {
+    component.form.get('nameList')?.setValue(' \n   \n');
+
+    component.randomizeName();
+
+    expect(component.items).toEqual([]);
+    expect(component.showRandomizer).toBeFalse();
   });
 
   it('should populate items with numbers from minValue to maxValue when randomizeNumber is called', () => {
@@ -61,6 +71,26 @@ describe('HomeComponent', () => {
   it('should clear items and update showRandomizer when minValue and maxValue are 0', () => {
     component.form.get('minValue')?.setValue(0);
     component.form.get('maxValue')?.setValue(0);
+
+    component.randomizeNumber();
+
+    expect(component.items).toEqual([]);
+    expect(component.showRandomizer).toBeFalse();
+  });
+
+  it('should keep randomizer hidden when minValue is greater than maxValue', () => {
+    component.form.get('minValue')?.setValue(10);
+    component.form.get('maxValue')?.setValue(5);
+
+    component.randomizeNumber();
+
+    expect(component.items).toEqual([]);
+    expect(component.showRandomizer).toBeFalse();
+  });
+
+  it('should keep randomizer hidden when number inputs are not integers', () => {
+    component.form.get('minValue')?.setValue(1.5);
+    component.form.get('maxValue')?.setValue(5);
 
     component.randomizeNumber();
 
